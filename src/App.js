@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+
+import "./App.css";
+import NavBar from "./components/NavBar";
+import ImageList from "./components/ImageList";
+import ImageView from "./components/ImageView";
 
 function App() {
+  const [searchWord, setSearchWord] = useState("clouds");
+  const [onChangeText, setOnChangeText] = useState("");
+
+  const updateOnChangeText = (e) => {
+    setOnChangeText(e.target.value);
+  };
+
+  let navigate = useNavigate();
+
+  const submitSearchWord = (e) => {
+    e.preventDefault();
+    setSearchWord(onChangeText);
+    navigate("/", { replace: true });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavBar
+        onChange={updateOnChangeText}
+        onSubmit={submitSearchWord}
+        onChangeText={onChangeText}
+      />
+      <Routes>
+        <Route path="/" element={<ImageList searchWord={searchWord} />} />
+        <Route path="/photos/:id" element={<ImageView />} />
+      </Routes>
     </div>
   );
 }
